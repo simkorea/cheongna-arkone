@@ -448,7 +448,9 @@ td.c,th.c{text-align:center}
 .field input:focus,.field select:focus,.field textarea:focus{
   outline:none;border-color:var(--teal-2);box-shadow:0 0 0 3px rgba(21,96,90,.14);
 }
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+/* 좁은 화면에서는 두 칸을 위아래로 — 전화번호·생년월일이 잘려 보이지 않게 */
+@media (max-width:420px){.field-row{grid-template-columns:1fr}}
 .agree{display:flex;align-items:flex-start;gap:9px;margin:4px 0 18px;font-size:13.5px;color:var(--text-2)}
 .agree input{width:18px;height:18px;margin-top:2px;flex:0 0 auto;accent-color:var(--teal)}
 .agree button{text-decoration:underline;color:var(--teal-2);font-size:13px}
@@ -1041,9 +1043,15 @@ body{padding-bottom:0}
               <label for="f-name">성함</label>
               <input type="text" id="f-name" name="name" autocomplete="name" placeholder="성함을 입력해 주세요" required>
             </div>
-            <div class="field">
-              <label for="f-phone">연락처</label>
-              <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="numeric" placeholder="010-0000-0000" required>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-phone">연락처</label>
+                <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="numeric" placeholder="010-0000-0000" required>
+              </div>
+              <div class="field">
+                <label for="f-birth">생년월일</label>
+                <input type="text" id="f-birth" name="birth" autocomplete="bday" inputmode="numeric" maxlength="10" placeholder="예) 1985-03-17">
+              </div>
             </div>
             <div class="field">
               <label for="f-type">관심 타입</label>
@@ -1082,7 +1090,7 @@ body{padding-bottom:0}
             </div>
             <div class="privbox" id="privBox">
               <b>개인정보 수집·이용 동의</b><br>
-              · 수집 항목: 성함, 연락처, 관심 타입, 방문 희망일시, 문의 내용<br>
+              · 수집 항목: 성함, 연락처, 생년월일, 관심 타입, 방문 희망일시, 문의 내용<br>
               · 수집 목적: 분양 상담 및 방문예약 안내<br>
               · 보유 기간: 분양 종료 후 6개월 이내 파기<br>
               · 동의를 거부하실 수 있으나, 거부 시 상담 예약이 어렵습니다.
@@ -1420,6 +1428,15 @@ body{padding-bottom:0}
         : v.length < 8 ? v.slice(0,3) + '-' + v.slice(3)
         : v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7);
     });
+    /* 생년월일 자동 하이픈 — 숫자만 받아 1985-03-17 꼴로 만든다 */
+    var birthEl = $('#f-birth');
+    if (birthEl) birthEl.addEventListener('input', function(){
+      var v = birthEl.value.replace(/\D/g,'').slice(0,8);
+      if (v.length > 6) v = v.slice(0,4) + '-' + v.slice(4,6) + '-' + v.slice(6);
+      else if (v.length > 4) v = v.slice(0,4) + '-' + v.slice(4);
+      birthEl.value = v;
+    });
+
     var dt = $('#f-date');
     if (dt){
       var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -1435,7 +1452,9 @@ body{padding-bottom:0}
       if (!$('#f-agree').checked){ msg.className='form-msg err'; msg.textContent='개인정보 수집·이용에 동의해 주세요.'; $('#f-agree').focus(); return; }
 
       var lines = [];
+      var birth = $('#f-birth').value.trim();
       var date = $('#f-date').value, time = $('#f-time').value, note = $('#f-msg').value.trim();
+      if (birth) lines.push('[생년월일] ' + birth);
       if (date) lines.push('[방문 희망일] ' + date + (time ? ' ' + time : ''));
       if (note) lines.push(note);
 
