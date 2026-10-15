@@ -44,8 +44,14 @@ module.exports = async (req, res) => {
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
   ));
 
+  /* 메일이 조용히 실패하면 리드를 놓친다. 응답 상태를 로그에 남긴다 —
+     Vercel Logs 에서 /api/consult 호출을 열면 바로 보인다. */
   try {
-    await fetch('https://api.resend.com/emails', {
+    if (!process.env.RESEND_API_KEY) {
+      console.error('Resend: RESEND_API_KEY 환경변수가 없습니다 (저장은 완료)');
+      return res.status(200).json({ success: true, mail: 'no-key' });
+    }
+    const mailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
@@ -57,42 +63,47 @@ module.exports = async (req, res) => {
         subject: `[청라 아크원 푸르지오${fromToss ? ' · 토스 광고' : ''}] 새 방문예약 — ${name}`,
         html: `
           <div style="font-family:'Apple SD Gothic Neo',sans-serif;max-width:520px;margin:0 auto;">
-            <h2 style="color:#07302C;border-bottom:2px solid #C8A96A;padding-bottom:10px;margin-bottom:16px;">
-              한강 푸르지오 리버프론트 · 새 방문예약이 접수되었습니다
+            <h2 style="color:#07171C;border-bottom:2px solid #15605A;padding-bottom:10px;margin-bottom:16px;">
+              청라 아크원 푸르지오 · 새 방문예약이 접수되었습니다
             </h2>
             <table style="width:100%;border-collapse:collapse;">
               <tr>
-                <td style="padding:10px 14px;background:#F2F5F3;font-weight:700;width:30%;border:1px solid #E4E8EE;color:#07302C;">현장</td>
-                <td style="padding:10px 14px;border:1px solid #E4E8EE;"><strong style="color:#0E6B62;">한강 푸르지오 리버프론트</strong></td>
+                <td style="padding:10px 14px;background:#F2EFE9;font-weight:700;width:30%;border:1px solid #E4E8EE;color:#07171C;">현장</td>
+                <td style="padding:10px 14px;border:1px solid #E4E8EE;"><strong style="color:#15605A;">청라 아크원 푸르지오</strong></td>
               </tr>
               <tr>
-                <td style="padding:10px 14px;background:#F2F5F3;font-weight:700;width:30%;border:1px solid #E4E8EE;color:#07302C;">이름</td>
+                <td style="padding:10px 14px;background:#F2EFE9;font-weight:700;width:30%;border:1px solid #E4E8EE;color:#07171C;">이름</td>
                 <td style="padding:10px 14px;border:1px solid #E4E8EE;">${esc(name)}</td>
               </tr>
               <tr>
-                <td style="padding:10px 14px;background:#F2F5F3;font-weight:700;border:1px solid #E4E8EE;color:#07302C;">연락처</td>
+                <td style="padding:10px 14px;background:#F2EFE9;font-weight:700;border:1px solid #E4E8EE;color:#07171C;">연락처</td>
                 <td style="padding:10px 14px;border:1px solid #E4E8EE;">
-                  <a href="tel:${esc(phone)}" style="color:#0E6B62;font-weight:700;">${esc(phone)}</a>
+                  <a href="tel:${esc(phone)}" style="color:#15605A;font-weight:700;">${esc(phone)}</a>
                 </td>
               </tr>
               <tr>
-                <td style="padding:10px 14px;background:#F2F5F3;font-weight:700;border:1px solid #E4E8EE;color:#07302C;">관심 타입</td>
+                <td style="padding:10px 14px;background:#F2EFE9;font-weight:700;border:1px solid #E4E8EE;color:#07171C;">관심 타입</td>
                 <td style="padding:10px 14px;border:1px solid #E4E8EE;">${esc(unit_type) || '미선택'}</td>
               </tr>
               <tr>
-                <td style="padding:10px 14px;background:#F2F5F3;font-weight:700;border:1px solid #E4E8EE;color:#07302C;">문의 내용</td>
+                <td style="padding:10px 14px;background:#F2EFE9;font-weight:700;border:1px solid #E4E8EE;color:#07171C;">문의 내용</td>
                 <td style="padding:10px 14px;border:1px solid #E4E8EE;white-space:pre-wrap;">${esc(message) || '없음'}</td>
               </tr>
             </table>
             <p style="margin-top:20px;color:#98A0AC;font-size:12px;">
-              한강 푸르지오 리버프론트 분양 안내 ·
-              <a href="https://hangang-prugio.vercel.app" style="color:#0E6B62;">홈페이지 바로가기</a>
+              청라 아크원 푸르지오 분양 안내 ·
+              <a href="https://cheongna-arkone.vercel.app" style="color:#15605A;">홈페이지 바로가기</a>
             </p>
           </div>
         `
       })
     });
-  } catch (_) {}
+    if (!mailRes.ok) {
+      console.error('Resend 발송 실패:', mailRes.status, await mailRes.text());
+    }
+  } catch (e) {
+    console.error('Resend 호출 예외:', e && e.message);
+  }
 
   return res.status(200).json({ success: true });
 };
