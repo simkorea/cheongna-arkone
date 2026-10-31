@@ -360,8 +360,8 @@ body.menu-on .menu a:nth-child(6){animation-delay:.3s}
 .sect-dark .stats dt,.sect-teal .stats dt{color:rgba(255,255,255,.55)}
 .stats dd{margin-top:8px;font-family:var(--latin);font-size:clamp(24px,3.2vw,40px);font-weight:800;line-height:1.08;overflow-wrap:anywhere}
 .stats dd small{font-family:var(--sans);font-size:13.5px;font-weight:600;margin-left:4px;letter-spacing:-.01em}
-.stats p{margin-top:9px;font-size:13px;color:var(--text-2);line-height:1.6}
-.sect-dark .stats p,.sect-teal .stats p{color:rgba(255,255,255,.6)}
+.stats dd.sub{margin-top:9px;font-family:var(--sans);font-size:13px;font-weight:400;color:var(--text-2);line-height:1.6;overflow-wrap:normal}
+.sect-dark .stats dd.sub,.sect-teal .stats dd.sub{color:rgba(255,255,255,.6)}
 
 /* ══ 11. 표 ══ */
 .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -536,7 +536,7 @@ body{padding-bottom:0}
 
 <!-- ══ 헤더 ══ -->
 <header class="hdr" id="hdr">
-  <a class="hdr-logo" href="#p-brand" data-go="p-brand" aria-label="청라 아크원 푸르지오 홈">
+  <a class="hdr-logo" href="#p-brand" data-go="p-brand" aria-label="ARK&middot;ONE 청라 아크원 푸르지오 홈">
     <b>ARK&middot;ONE</b><span>청라 아크원 푸르지오</span>
   </a>
   <nav class="gnb" aria-label="메인 네비게이션">
@@ -601,10 +601,10 @@ body{padding-bottom:0}
       </div>
 
       <dl class="stats reveal">
-        <div><dt>대지면적</dt><dd class="num">35,306<small>㎡</small></dd><p>약 10,680평</p></div>
-        <div><dt>연면적</dt><dd class="num">424,558<small>㎡</small></dd><p>약 128,428평</p></div>
-        <div><dt>건폐율 / 용적률</dt><dd class="num">34.78<small>%</small></dd><p>용적률 799.57%</p></div>
-        <div><dt>주차대수</dt><dd class="num">3,124<small>대</small></dd><p>오피스텔 포함</p></div>
+        <div><dt>대지면적</dt><dd class="num">35,306<small>㎡</small></dd><dd class="sub">약 10,680평</dd></div>
+        <div><dt>연면적</dt><dd class="num">424,558<small>㎡</small></dd><dd class="sub">약 128,428평</dd></div>
+        <div><dt>건폐율 / 용적률</dt><dd class="num">34.78<small>%</small></dd><dd class="sub">용적률 799.57%</dd></div>
+        <div><dt>주차대수</dt><dd class="num">3,124<small>대</small></dd><dd class="sub">오피스텔 포함</dd></div>
       </dl>
 
       <div class="split" style="margin-top:clamp(36px,5vw,70px)">
@@ -615,8 +615,8 @@ body{padding-bottom:0}
             인접한 청라 피크원 푸르지오와 함께 청라국제업무단지에 푸르지오 브랜드타운이 형성됩니다.
           </p>
           <dl class="stats" style="margin-top:26px;grid-template-columns:repeat(2,minmax(0,1fr))">
-            <div><dt>시공</dt><dd style="font-size:22px">㈜대우건설</dd><p>2025년 시공능력평가 3위</p></div>
-            <div><dt>시행</dt><dd style="font-size:22px">㈜청라스마트시티</dd><p>사업주체</p></div>
+            <div><dt>시공</dt><dd style="font-size:22px">㈜대우건설</dd><dd class="sub">2025년 시공능력평가 3위</dd></div>
+            <div><dt>시행</dt><dd style="font-size:22px">㈜청라스마트시티</dd><dd class="sub">사업주체</dd></div>
           </dl>
         </div>
         <figure class="figwrap reveal" data-d="1" style="margin:0">
@@ -879,10 +879,10 @@ body{padding-bottom:0}
         <h2>단지 규모</h2>
       </div>
       <dl class="stats reveal">
-        <div><dt>건축규모</dt><dd class="num">44<small>층</small></dd><p>지하 5층 ~ 지상 44층</p></div>
-        <div><dt>동 수</dt><dd class="num">6<small>개 동</small></dd><p>이 중 아파트 3개 동</p></div>
-        <div><dt>총 세대</dt><dd class="num">1,855</dd><p>APT 868 · OT 987</p></div>
-        <div><dt>주차</dt><dd class="num">3,124<small>대</small></dd><p>오피스텔 포함</p></div>
+        <div><dt>건축규모</dt><dd class="num">44<small>층</small></dd><dd class="sub">지하 5층 ~ 지상 44층</dd></div>
+        <div><dt>동 수</dt><dd class="num">6<small>개 동</small></dd><dd class="sub">이 중 아파트 3개 동</dd></div>
+        <div><dt>총 세대</dt><dd class="num">1,855</dd><dd class="sub">APT 868 · OT 987</dd></div>
+        <div><dt>주차</dt><dd class="num">3,124<small>대</small></dd><dd class="sub">오피스텔 포함</dd></div>
       </dl>
       <figure class="figwrap reveal" style="margin:clamp(26px,3.4vw,44px) 0 0">
         <img src="./images/ca/ls-street.jpg" alt="청라국제도시 가로 전경" loading="lazy" width="600" height="1216">
@@ -1102,7 +1102,7 @@ body{padding-bottom:0}
 
         <div class="reveal" data-d="1">
           <dl class="stats" style="grid-template-columns:minmax(0,1fr)">
-            <div><dt>대표번호</dt><dd><a href="tel:1555-1087" class="num" style="font-size:30px">1555-1087</a></dd><p>상담 가능 시간 10:00 ~ 18:00</p></div>
+            <div><dt>대표번호</dt><dd><a href="tel:1555-1087" class="num" style="font-size:30px">1555-1087</a></dd><dd class="sub">상담 가능 시간 10:00 ~ 18:00</dd></div>
           </dl>
           <figure style="margin:22px 0 0">
             <img src="./images/ca/map-site.png" alt="청라 아크원 푸르지오 현장과 견본주택 약도" loading="lazy" width="970" height="680">
